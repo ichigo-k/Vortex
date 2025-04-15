@@ -23,7 +23,7 @@ def prompt(instruction):
 {CURRENT_DIR}
 
 ## History of previous commands:
-{HISTORY}
+#{HISTORY}
 
 ## Instruction:
 {instruction}
@@ -31,13 +31,19 @@ def prompt(instruction):
 # Output:
 Provide the exact shell command only, without explanations.
 All output must be terminal executable no formatting or anything that can cause a system error
-Things like ```shell or ```yml etc must be ignore only plain text is needed
+Things like ```shell or ```yml or ```powershell or ```bash or ```script or ```code or ```cmd  etc must be removed only plain text is needed
 Output that might cos an error must be avoided 
 Output must be specific to {CURRENT_OS}
+It it is a windows machine use cmd by default unless told otherwise
+
+OUTPUT LIKE THE ONE BELOW MUST BE AVOIDED 
+```cmd
+dir /b *.jpg *.jpeg *.png *.gif | find /c /v ""
+```
+
+INSTEAD RETURN ONLY dir /b *.jpg *.jpeg *.png *.gif | find /c /v ""
 
     """
-
-    print(message)
 
     response = model.generate_content(message)
     return response.text

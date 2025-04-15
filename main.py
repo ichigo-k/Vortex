@@ -8,6 +8,9 @@ import pyperclip
 import pyautogui
 
 
+
+pyautogui.FAILSAFE = False
+
 @click.group
 def cli():
     pass
