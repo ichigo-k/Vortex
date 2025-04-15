@@ -1,3 +1,3 @@
+from utils.prompt import prompt
 
-
-print("Initial commit")
+print(prompt("Tell me a joke"))
