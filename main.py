@@ -2,6 +2,8 @@ import os
 from datetime import datetime
 import click
 import json
+
+from build.lib.config.config import CURRENT_OS
 from config.config import HISTORY
 from utils.prompt import prompt
 import pyperclip
@@ -27,7 +29,11 @@ def solve(task):
         HISTORY[f"{timestamp} [AI RUN]"]= command
 
         pyperclip.copy(command)
-        pyautogui.hotkey('ctrl', 'v')
+        if CURRENT_OS == "Windows":
+            pyautogui.hotkey('ctrl', 'v')
+        else:
+            pyautogui.hotkey('ctrl','shift', 'v')
+
         pyautogui.hotkey('enter')
 
         # HISTORY[f"{timestamp} [OUTPUT]"]= result.stdout

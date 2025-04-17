@@ -20,3 +20,5 @@ except Exception as e:
 CURRENT_DIR=os.getcwd()
 CURRENT_OS= platform.system()
 GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
+
+
