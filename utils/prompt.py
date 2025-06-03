@@ -4,46 +4,50 @@ from config.gen_ai_config import model
 
 def prompt(instruction):
     message = f"""
-        You are a precise AI assistant that translates natural language commands into shell commands for {CURRENT_OS}.
+
+You are an AI assistant that converts user instructions into valid shell commands for {CURRENT_OS}.
 
 ## Behavior:
-- Translate the user instruction into a valid bash/zsh command.
-- Use the history of commands and outputs only as context for the task at hand.
-- If the new instruction is unrelated to the prior history, do not try to correlate them. Generate the appropriate shell command for the new task.
-- Output only the next shell command in plain text, with no explanations or extra formatting.
+- Convert the given instruction into a correct and executable shell command.
+- Use command history ONLY as context — do not repeat or reference it unless the instruction implies fixing or continuing.
+- If the instruction contains words like "fix", "resolve", or "try again", assume the last command failed and generate a specific shell command to solve that error.
+- Your output must be a single, executable command with NO extra formatting or explanation.
+- Do not restate or describe errors. Just output the exact fix command.
+- If commands are not found try installing them
+- Also success full commands will be passed again incase they need further execution.
+- For example like maybe creating a new folder, changing dir to the folder and creating a new folder again, this task will be run independently.
+- If there is no need for further processing just print done
+
+## Examples:
+❌ WRONG:
+"The system cannot find the file specified.": Verify that 'old_name.txt' exists.
+✅ CORRECT:
+dir
+
+❌ WRONG:
+```cmd
+cd Desktop
+```
+✅ CORRECT:
+cd Desktop
 
 ## Rules:
-- If the instruction is unrelated to previous tasks, ignore the history and output the required command based on the new instruction.
-- If unsure about the next step, return a safe command (e.g., `cd ~` to the home directory).
-- Use relative paths where possible (e.g., `~/Desktop`).
-- Do not repeat prior steps unless necessary for the new task.
-- Always prioritize executing the new task, even if it doesn't correlate with prior commands.
+- Never output explanation, description, or formatting — ONLY the raw command.
+- Use `cmd` syntax for Windows unless told otherwise.
+- Use relative paths (like `~/Desktop`) when possible.
 
-## Current Directory:
-{CURRENT_DIR}
-
-## History of previous commands:
-#{HISTORY}
+## Context:
+- Current Directory: {CURRENT_DIR}
+- Command History: {HISTORY}
 
 ## Instruction:
 {instruction}
 
-# Output:
-Provide the exact shell command only, without explanations.
-All output must be terminal executable no formatting or anything that can cause a system error
-Things like ```shell or ```yml or ```powershell or ```bash or ```script or ```code or ```cmd  etc must be removed only plain text is needed
-Output that might cos an error must be avoided 
-Output must be specific to {CURRENT_OS}
-It it is a windows machine use cmd by default unless told otherwise
-
-OUTPUT LIKE THE ONE BELOW MUST BE AVOIDED 
-```cmd
-dir /b *.jpg *.jpeg *.png *.gif | find /c /v ""
-```
-
-INSTEAD RETURN ONLY dir /b *.jpg *.jpeg *.png *.gif | find /c /v ""
+## Output:
+Respond with only one valid shell/cmd command — no comments, no markdown, no code blocks, no formatting.
 
     """
 
     response = model.generate_content(message)
     return response.text
+

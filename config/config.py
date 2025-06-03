@@ -10,10 +10,9 @@ try:
     with open("logs.json", "r") as f:
         HISTORY = json.load(f)
 
-    if len(HISTORY) > 15:
-        with open("logs.json", "w") as f:
-            json.dump({}, f)
-        HISTORY = {}
+    if len(HISTORY) > 8:
+        oldest_key = next(iter(HISTORY))
+        del HISTORY[oldest_key]
 
 except Exception as e:
     HISTORY = {}
