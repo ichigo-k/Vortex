@@ -55,11 +55,10 @@ def process_task(task, second_time, success):
         with open("logs.json", "w") as f:
             json.dump(HISTORY, f, indent=4)
 
-        if result.stderr:
+        if result.returncode != 0:
             process_task("execute shell command to fix this", True, False)
-
-        if result.stdout:
-                process_task("continue this execution", True, True)
+        else:
+            process_task("continue this execution", True, True)
 
     except Exception as e:
         click.secho("Something went wrong, please try again later!", fg="red")

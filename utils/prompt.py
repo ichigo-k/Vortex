@@ -44,6 +44,18 @@ cd Desktop
 ✅ CORRECT:
 cd Desktop
 
+
+❌ WRONG:
+git add . && git commit -m "msg" && git push origin main
+✅ CORRECT:
+git add .
+
+(next run)
+git commit -m "msg"
+
+(next run)
+git push origin main
+
 ## Rules:
 - Never output explanation, description, or formatting — ONLY the raw command.
 - Use `cmd` syntax for Windows unless told otherwise.
